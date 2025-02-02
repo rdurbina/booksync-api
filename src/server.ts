@@ -1,17 +1,16 @@
 import express from "express";
 import "dotenv/config";
-import { mongooseConnection } from "./config/dbConfig.js";
-import { USER_API } from "./utils/constants.js";
-import userRouter from "./routes/userRouter.js";
-
-const PORT = process.env.PORT || 3000;
+//import userRouter from "./presentation/routes/userRouter.js";
+import { mongooseConnection } from "./infrastructure/databases/mongodb/MongoDBConfig.js";
 
 mongooseConnection();
 
+const PORT = process.env.PORT || 3000;
+
 const server = express();
 
-server.use(USER_API.BASE, userRouter);
+//server.use("/user", userRouter);
 
 server.listen(PORT, () => {
-  console.log("Server started on port: ", PORT);
+console.log("Server started on port: ", PORT);
 });

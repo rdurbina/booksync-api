@@ -16,6 +16,5 @@ const bookSchema = new mongoose.Schema({
   createdBy: String,
 });
 
-const Book = model("Book", bookSchema);
-
-export default Book;
+const BookModel = model("Book", bookSchema);
+export default BookModel;

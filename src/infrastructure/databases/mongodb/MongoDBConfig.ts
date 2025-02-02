@@ -7,9 +7,9 @@ export const mongooseConnection = async () => {
       throw new Error("Invalid connection string");
     }
     await mongoose.connect(uri);
-    console.log("Database ready!");
+    console.log("Database is ready!");
   } catch (e) {
-    console.log("Error connecting to MongoDB, exiting...");
+    console.log("Error while trying to connect to MongoDB, exiting...");
     process.exit(1);
   };
 };
