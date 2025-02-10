@@ -1,13 +1,14 @@
-import { inject } from "inversify";
+import { inject, injectable } from "inversify";
 import User from "../../../domain/entities/User.js";
 import IUserRepository  from "../../../domain/repositories/IUserRepository";
 import UserDto from "../../dtos/UserDto.js";
 import { DI_TYPES } from "../../../di/types.js";
 
+@injectable()
 export default class CreateUserUseCase {
   constructor(
     @inject(DI_TYPES.UserRepository)
-    private readonly userRepository: IUserRepository
+    private userRepository: IUserRepository
   ) {}
 
   async execute(data: UserDto) {

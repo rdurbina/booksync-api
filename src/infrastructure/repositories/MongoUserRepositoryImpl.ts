@@ -10,13 +10,13 @@ export default class MongoUserRepositoryImpl implements IUserRepository {
     const savedUser = await userModel.save();
     return UserMapper.fromModel(savedUser);
   }
-  findById(id: string): Promise<User> {
+  async findById(id: string): Promise<User> {
     throw new Error("Method not implemented.");
   }
-  findByUsername(username: string): Promise<User> {
+  async findByUsername(username: string): Promise<User> {
     throw new Error("Method not implemented.");
   }
-  delete(id: string): Promise<User> {
+  async delete(id: string): Promise<User> {
     throw new Error("Method not implemented.");
   }
 }
