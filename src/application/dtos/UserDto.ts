@@ -1,3 +1,15 @@
 export default class UserDto {
-  constructor(username: string, role: string) {}
+  constructor(
+    public username: string,
+    public email: string,
+    public role: string,
+    private _password?: string
+  ) {}
+
+  get password(): string {
+    return this._password ?? "";
+  }
+  set password(value: string) {
+    this._password = value;
+  }
 }

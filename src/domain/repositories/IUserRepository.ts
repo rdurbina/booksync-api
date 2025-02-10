@@ -1,8 +1,8 @@
 import User from "../entities/User.js";
 
-export interface IUserRepository {
-  create(user: User): boolean;
-  findById(id: string): User;
-  findByUsername(username: string): User;
-  delete(id: string): boolean;
+export default interface IUserRepository {
+  create(user: User): Promise<User>;
+  findById(id: string): Promise<User>;
+  findByUsername(username: string): Promise<User>;
+  delete(id: string): Promise<User>;
 }
