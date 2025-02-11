@@ -1,18 +1,18 @@
-import express from "express";
-import "dotenv/config";
-import userRouter from "./presentation/routes/userRouter.js";
+import app from "./app.js";
 import { mongooseConnection } from "./infrastructure/config/MongoDBConfig.js";
-
-mongooseConnection();
 
 const PORT = process.env.PORT || 3000;
 
-const server = express();
+const startSever = async () => {
+  try {
+    await mongooseConnection();
+    app.listen(PORT, () => {
+      console.log("Server listening on port:", PORT);
+    })
+  } catch (error) {
+    console.log("Database connection error", error);
+    process.exit(1);
+  }
+}
 
-server.use(express.json());
-server.use(express.urlencoded({ extended: true }))
-server.use("/user", userRouter);
-
-server.listen(PORT, () => {
-console.log("Server started on port: ", PORT);
-});
+startSever();
