@@ -7,7 +7,8 @@ export default class User {
     private _username: string,
     private _email: string,
     private _password: string,
-    private _role: string
+    private _role: string,
+    private readonly _id: string | null = null
   ) {
     const errors: { field: string; message: string }[] = [];
     if (this.username.length < 2) {
@@ -95,5 +96,9 @@ export default class User {
       throw new InvalidFieldAssignmentDomainError("Invalid role.");
     }
     this._role = value;
+  }
+
+  get id(): string | null {
+    return this._id ?? null;
   }
 }
