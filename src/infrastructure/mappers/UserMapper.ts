@@ -1,4 +1,4 @@
-import User from "../../domain/entities/User";
+import User from "../../domain/user/User";
 import UserModel from "../databases/mongodb/models/UserModel";
 import { UserModelType } from "../databases/mongodb/models/UserModel";
 

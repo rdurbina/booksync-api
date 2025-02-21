@@ -16,8 +16,8 @@ export default class UserController {
       const savedUser = await this.createUserUseCase.execute(data);
       res.status(200).json({ savedUser: savedUser });
     } catch (error) {
-      console.log(error)
-      res.status(400).json({message: "An error has occurred..."});
+      console.log(error);
+      res.status(400).json({ message: "An error has occurred..." });
     }
   }
 }

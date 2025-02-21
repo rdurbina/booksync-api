@@ -3,7 +3,7 @@ import IUserRepository from "../domain/repositories/IUserRepository";
 import { DI_TYPES } from "./types.js";
 import MongoUserRepositoryImpl from "../infrastructure/repositories/MongoUserRepositoryImpl.js";
 import CreateUserUseCase from "../application/use-cases/user/CreateUserUseCase.js";
-import UserController from "../presentation/controllers/UserController.js";
+import UserController from "../api/controllers/UserController.js";
 
 export const container = new Container({
     defaultScope: "Singleton"

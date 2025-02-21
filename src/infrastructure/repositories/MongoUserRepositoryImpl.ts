@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import User from "../../domain/entities/User.js";
+import User from "../../domain/user/User.js";
 import IUserRepository from "../../domain/repositories/IUserRepository.js";
 import UserMapper from "../mappers/UserMapper.js";
 
