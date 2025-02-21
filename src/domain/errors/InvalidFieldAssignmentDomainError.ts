@@ -1,8 +1,6 @@
 class InvalidFieldAssignmentDomainError extends Error {
-  readonly name: string = "InvalidFieldAssignmentDomainError"
-  constructor(
-    readonly message: string,
-  ) {
+  public readonly name: string = "InvalidFieldAssignmentDomainError";
+  constructor(readonly code: string, readonly message: string) {
     super(message);
   }
 }

@@ -1,7 +1,6 @@
 export default class User {
   private readonly emailRegex = /^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/;
   private readonly passwordRegex = /^(?=.*[!@#$%^&*])(?=.{8,})/;
-  private readonly allowedRoles = ["contributor", "admin"];
 
   constructor(
     private _username: string,

@@ -1,9 +1,9 @@
 export default class UserDto {
   constructor(
-    public id: string,
-    public username: string,
-    public email: string,
-    public role: string,
+    readonly id: string,
+    readonly username: string,
+    readonly email: string,
+    readonly role: string,
     private _password?: string
   ) {}
 
