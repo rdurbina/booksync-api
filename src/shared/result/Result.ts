@@ -1,6 +1,6 @@
 import ArgumentError from "./ArgumentError";
 
-class Result<T> {
+export default class Result<T> {
   private constructor(
     public readonly isSuccess: boolean,
     public readonly value?: T,
@@ -8,7 +8,7 @@ class Result<T> {
   ) {
     if (
       (isSuccess && error !== undefined) ||
-      (!isSuccess && !error !== undefined)
+      (!isSuccess && error === undefined)
     ) {
       throw new ArgumentError(
         "Invalid arguments: success must not include an error and failure must include an error"
