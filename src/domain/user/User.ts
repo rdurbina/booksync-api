@@ -1,103 +1,64 @@
-export default class User {
-  private readonly emailRegex = /^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/;
-  private readonly passwordRegex = /^(?=.*[!@#$%^&*])(?=.{8,})/;
+import Result from "../../shared/result/Result.js";
+import InvalidInputDomainError from "../errors/InvalidInputDomainError.js";
 
-  constructor(
+export default class User {
+  private static readonly emailRegex = /^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/;
+  private static readonly passwordRegex = /^(?=.*[!@#$%^&*])(?=.{8,})/;
+
+  private constructor(
     private _username: string,
     private _email: string,
     private _password: string,
     private _role: string,
-    private readonly _id: string | null = null
-  ) {
-    const errors: { field: string; message: string }[] = [];
-    if (this.username.length < 2) {
-      errors.push({
-        field: "username",
-        message: "The username should be at least characters long.",
-      });
+    private readonly _id?: string
+  ) {}
+
+  static create(
+    username: string,
+    email: string,
+    password: string,
+    role: string
+  ): Result<User> {
+    const errors: InvalidInputDomainError[] = [];
+    if (username.length < 2) {
+      errors.push(
+        new InvalidInputDomainError(
+          "username",
+          "The username should be at least characters long."
+        )
+      );
     }
-    if (!this.emailRegex.test(this._email)) {
-      errors.push({
-        field: "email",
-        message: "Invalid email address.",
-      });
+    if (!this.emailRegex.test(email)) {
+      errors.push(
+        new InvalidInputDomainError("email", "Invalid email address.")
+      );
     }
-    if (!this.passwordRegex.test(this._password)) {
-      errors.push({
-        field: "password",
-        message: "The password must be at least 8 characters long.",
-      });
+    if (!this.passwordRegex.test(password)) {
+      errors.push(
+        new InvalidInputDomainError(
+          "password",
+          "The password must be at least 8 characters long."
+        )
+      );
     }
-    if (this.role == "" || this.role == null) {
-      errors.push({
-        field: "role",
-        message: "The role can't be empty.",
-      });
+    if (role == "" || role == null) {
+      errors.push(
+        new InvalidInputDomainError("role", "The role can't be empty.")
+      );
     }
-    if (!this.allowedRoles.includes(this.role)) {
-      errors.push({
-        field: "role",
-        message: "Invalid role.",
-      });
+    if (!Object.values(Roles).includes(role)) {
+      errors.push(new InvalidInputDomainError("role", "Invalid role."));
     }
+
     if (errors.length > 0) {
-      throw new UserValidationDomainError(
-        "The following errors where encountered when trying to create a user",
-        errors
+      return Result.failure(
+        new UserValidationDomainError(
+          "There were errors when trying to initialize the user",
+          errors
+        )
       );
     }
-  }
 
-  get username(): string {
-    return this._username;
-  }
-
-  set username(value: string) {
-    if (value.length < 2) {
-      throw new InvalidFieldAssignmentDomainError(
-        "The username should be at least characters long."
-      );
-    }
-    this._username = value;
-  }
-
-  get email(): string {
-    return this._email;
-  }
-
-  set email(value: string) {
-    if (!this.emailRegex.test(value)) {
-      throw new InvalidFieldAssignmentDomainError("Invalid email address");
-    }
-    this._email = value;
-  }
-
-  get password(): string {
-    return this._password;
-  }
-
-  set password(value: string) {
-    if (!this.passwordRegex.test(value)) {
-      throw new InvalidFieldAssignmentDomainError("The password must be at least 8 characters long.");
-    }
-    this._password = value;
-  }
-
-  get role(): string {
-    return this._role;
-  }
-
-  set role(value: string) {
-    if (this.role == "" || this.role == null) {
-      throw new InvalidFieldAssignmentDomainError("The role can't be empty.");
-    }
-    if (!this.allowedRoles.includes(this.role)) {
-      throw new InvalidFieldAssignmentDomainError("Invalid role.");
-    }
-    this._role = value;
-  }
-
-  get id(): string | null {
-    return this._id ?? null;
+    return Result.success(new User(username, email, password, role));
   }
 }
