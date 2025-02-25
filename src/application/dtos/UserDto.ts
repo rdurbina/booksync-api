@@ -1,16 +1,21 @@
 export default class UserDto {
-  constructor(
-    readonly id: string,
+  private constructor(
+    readonly firstName: string,
+    readonly lastName: string,
     readonly username: string,
     readonly email: string,
-    readonly role: string,
-    private _password?: string
+    readonly password?: string,
+    readonly isAdmin?: boolean,
+    readonly id?: string
   ) {}
 
-  get password(): string {
-    return this._password ?? "";
-  }
-  set password(value: string) {
-    this._password = value;
+  static create(
+    firstName: string,
+    lastName: string,
+    username: string,
+    email: string,
+    password: string
+  ): UserDto {
+    return new UserDto(firstName, lastName, username, email, password);
   }
 }

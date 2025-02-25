@@ -1,4 +1,0 @@
-enum Roles {
-  Contributor,
-  Admin,
-}

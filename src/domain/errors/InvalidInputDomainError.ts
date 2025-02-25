@@ -1,6 +1,5 @@
-export default class InvalidInputDomainError extends Error {
+import SpecificDomainError from "./base/SpecificDomainError.js";
+
+export default class InvalidInputDomainError extends SpecificDomainError {
   public readonly name: string = "InvalidFieldAssignmentDomainError";
-  constructor(readonly field: string, readonly message: string) {
-    super(message);
-  }
 }

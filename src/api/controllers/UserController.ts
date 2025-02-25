@@ -7,15 +7,22 @@ import { inject, injectable } from "inversify";
 export default class UserController {
   constructor(
     @inject(CreateUserUseCase)
-    private createUserUseCase: CreateUserUseCase
+    private readonly _createUserUseCase: CreateUserUseCase
   ) {}
-  async createUser(req: Request, res: Response) {
-    const { username, password, email } = req.body;
+  async createUser(req: Request, res: Response): Promise<void> {
+    const { firstName, lastName, username, password, email } = req.body;
     try {
-      const data = new UserDto(username, email, "contributor", password);
-      const savedUser = await this.createUserUseCase.execute(data);
+      const data = UserDto.create(
+        firstName,
+        lastName,
+        username,
+        email,
+        password
+      );
+      const savedUser = await this._createUserUseCase.execute(data);
       res.status(200).json({ savedUser: savedUser });
     } catch (error) {
+      //Error behavior yet not specified
       console.log(error);
       res.status(400).json({ message: "An error has occurred..." });
     }
