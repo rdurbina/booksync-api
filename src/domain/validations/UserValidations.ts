@@ -36,7 +36,7 @@ export function validateNonOptionalParams(
       )
     );
   }
-  if (emailRegex.test(email)) {
+  if (!emailRegex.test(email)) {
     errors.push(
       new InvalidInputDomainError(
         "Email.InvalidInput",
@@ -44,7 +44,7 @@ export function validateNonOptionalParams(
       )
     );
   }
-  if (passwordRegex.test(password)) {
+  if (!passwordRegex.test(password)) {
     errors.push(
       new InvalidInputDomainError(
         "Password.InvalidInput",

@@ -27,7 +27,7 @@ export default class CreateUserUseCase {
         new ValidationError(
           "Couldn't create user",
           "Issues were encountered when trying to create a new user",
-          userResult.error?.errors ?? []
+          userResult.error.errors
         )
       );
     }
