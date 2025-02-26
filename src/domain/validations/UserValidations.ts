@@ -40,7 +40,7 @@ export function validateNonOptionalParams(
     errors.push(
       new InvalidInputDomainError(
         "Email.InvalidInput",
-        "Invalid email address."
+        "Invalid email address. Some valid examples: name@mymail.com | name@myinstitution.edu.us"
       )
     );
   }
@@ -48,10 +48,12 @@ export function validateNonOptionalParams(
     errors.push(
       new InvalidInputDomainError(
         "Password.InvalidInput",
-        "The password must be at least 8 characters long."
+        "The password should at least contain one special character" +
+          "from: ! @ # $ % ^ & and be at least 8 characters long"
       )
     );
   }
+
   return errors;
 }
 

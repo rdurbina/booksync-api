@@ -6,4 +6,12 @@ export default abstract class AppError extends Error {
   ) {
     super(message);
   }
+
+  toJSON() {
+    return {
+      title: this.title,
+      message: this.message,
+      errors: this.errors,
+    };
+  }
 }
