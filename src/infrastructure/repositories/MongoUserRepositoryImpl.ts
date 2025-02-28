@@ -3,10 +3,14 @@ import User from "../../domain/user/User.js";
 import IUserRepository from "../../application/repositories/IUserRepository.js";
 import UserMapper from "../mappers/UserMapper.js";
 import { failure, Result, success } from "../../shared/result/Result.js";
-import UnexpectedError from "../../application/errors/UnexpectedError.js";
+import UnexpectedError from "../../application/errors/base/UnexpectedError.js";
+import NotFoundError from "../../application/errors/base/NotFoundError.js";
 
 @injectable()
 export default class MongoUserRepositoryImpl implements IUserRepository {
+  findByEmail(email: string): Promise<Result<User, NotFoundError>> {
+    throw new Error("Method not implemented.");
+  }
   async add(user: User): Promise<Result<User, UnexpectedError>> {
     const userModel = UserMapper.toMongooseModel(user);
     const savedUser = await userModel.save();

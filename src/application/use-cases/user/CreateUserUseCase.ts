@@ -4,8 +4,9 @@ import IUserRepository from "../../repositories/IUserRepository.js";
 import UserDto from "../../dtos/UserDto.js";
 import { DI_TYPES } from "../../../di/types.js";
 import { failure, Result, success } from "../../../shared/result/Result.js";
-import ValidationError from "../../errors/ValidationError.js";
-import UnexpectedError from "../../errors/UnexpectedError.js";
+import AppError from "../../errors/base/AppError.js";
+import UnexpectedError from "../../errors/base/UnexpectedError.js";
+import ValidationError from "../../errors/base/ValidationError.js";
 
 @injectable()
 export default class CreateUserUseCase {
@@ -14,7 +15,7 @@ export default class CreateUserUseCase {
     private readonly _userRepository: IUserRepository
   ) {}
 
-  async execute(data: UserDto): Promise<Result<UserDto, ValidationError>> {
+  async execute(data: UserDto): Promise<Result<UserDto, AppError>> {
     const userResult = User.create(
       data.firstName,
       data.lastName,

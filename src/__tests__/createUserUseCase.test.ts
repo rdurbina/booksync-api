@@ -12,6 +12,7 @@ describe("CreateUserUseCase", () => {
     mockUserRepository = {
       add: vi.fn(),
       findById: vi.fn(),
+      findByEmail: vi.fn(),
       findByUsername: vi.fn(),
       delete: vi.fn(),
     };
