@@ -7,6 +7,8 @@ import { failure, Result, success } from "../../../shared/result/Result.js";
 import AppError from "../../errors/base/AppError.js";
 import UnexpectedError from "../../errors/base/UnexpectedError.js";
 import ValidationError from "../../errors/base/ValidationError.js";
+import EmailAlreadyInUseError from "../../errors/EmailAlreadyInUseError.js";
+import UsernameAlreadyInUseError from "../../errors/UsernameAlreadyInUseError.js";
 
 @injectable()
 export default class CreateUserUseCase {
@@ -33,10 +35,38 @@ export default class CreateUserUseCase {
       );
     }
 
+    const user = userResult.value;
+
+    const isEmailAlreadyInUse = await this._userRepository.findByEmail(
+      user.email
+    );
+
+    if (isEmailAlreadyInUse) {
+      return failure(
+        new EmailAlreadyInUseError(
+          "The email provided is already in use",
+          "Cannot create a user with an email already in use, please provide a valid email address."
+        )
+      );
+    }
+
+    const isUsernameAlreadyInUse = await this._userRepository.findByUsername(
+      user.username
+    );
+
+    if (isUsernameAlreadyInUse) {
+      return failure(
+        new UsernameAlreadyInUseError(
+          "The username provided is already in use",
+          "Cannot create a user with a username already in use, please provide a valid username."
+        )
+      );
+    }
+
     const savedUserResult = await this._userRepository.add(userResult.value);
 
     if (!savedUserResult.isSuccess) {
-      throw new UnexpectedError("Something went wrong", "");
+      throw new UnexpectedError("Something went wrong...", "");
     }
 
     return success(

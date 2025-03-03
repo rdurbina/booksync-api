@@ -1,12 +1,11 @@
 import User from "../../domain/user/User";
 import { Result } from "../../shared/result/Result";
-import NotFoundError from "../errors//base/NotFoundError";
-import UnexpectedError from "../errors/base/UnexpectedError";
+import RepositoryError from "../errors/RepositoryError";
 
 export default interface IUserRepository {
-  add(user: User): Promise<Result<User, UnexpectedError>>;
-  findById(id: string): Promise<User>;
-  findByEmail(email: string): Promise<Result<User, NotFoundError>>;
-  findByUsername(username: string): Promise<User>;
-  delete(id: string): Promise<User>;
+  add(user: User): Promise<Result<User, RepositoryError>>;
+  findById(id: string): Promise<User | null>;
+  findByEmail(email: string): Promise<User | null>;
+  findByUsername(username: string): Promise<User | null>;
+  delete(id: string): Promise<Result<boolean, RepositoryError>>;
 }
