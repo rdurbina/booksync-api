@@ -72,6 +72,14 @@ export default class User {
     );
   }
 
+  setHashedPassword(hashedPassword: string): boolean {
+    if (hashedPassword === null) {
+      return false;
+    }
+    this._password = hashedPassword;
+    return true;
+  }
+
   get firstName(): string {
     return this._firstName;
   }

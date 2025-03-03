@@ -9,6 +9,7 @@ import UnexpectedError from "../../errors/base/UnexpectedError.js";
 import ValidationError from "../../errors/base/ValidationError.js";
 import EmailAlreadyInUseError from "../../errors/EmailAlreadyInUseError.js";
 import UsernameAlreadyInUseError from "../../errors/UsernameAlreadyInUseError.js";
+import { hash } from "bcrypt";
 
 @injectable()
 export default class CreateUserUseCase {
@@ -59,6 +60,19 @@ export default class CreateUserUseCase {
         new UsernameAlreadyInUseError(
           "The username provided is already in use",
           "Cannot create a user with a username already in use, please provide a valid username."
+        )
+      );
+    }
+
+    const saltRounds = parseInt(process.env.SALT_ROUNDS || "10");
+    const hashedPassword = await hash(user.password, saltRounds);
+    const isPasswordSet = user.setHashedPassword(hashedPassword);
+
+    if (!isPasswordSet) {
+      return failure(
+        new UnexpectedError(
+          "Unexpected error",
+          "Something went wrong... Please try again later."
         )
       );
     }
