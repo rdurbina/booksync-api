@@ -19,11 +19,11 @@ export default class MongoUserRepositoryImpl implements IUserRepository {
     return success(result);
   }
 
-  async delete(id: string): Promise<Result<boolean, RepositoryError>> {
+  async delete(id: string): Promise<Result<void, RepositoryError>> {
     const deletedUser = await UserModel.findOneAndDelete({ _id: id });
     if (deletedUser === null)
       return failure(new RepositoryError(ErrorCodes.NotFoundError));
-    return success(true);
+    return success(undefined);
   }
 
   async findById(id: string): Promise<User | null> {

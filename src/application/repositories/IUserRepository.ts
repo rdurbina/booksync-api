@@ -7,5 +7,5 @@ export default interface IUserRepository {
   findById(id: string): Promise<User | null>;
   findByEmail(email: string): Promise<User | null>;
   findByUsername(username: string): Promise<User | null>;
-  delete(id: string): Promise<Result<boolean, RepositoryError>>;
+  delete(id: string): Promise<Result<void, RepositoryError>>;
 }
