@@ -17,6 +17,7 @@ describe("DeleteUserUseCase", () => {
       findByEmail: vi.fn(),
       findByUsername: vi.fn(),
       delete: vi.fn(),
+      update: vi.fn(),
     };
     deleteUserUseCase = new DeleteUserUseCase(
       mockUserRepository as IUserRepository
@@ -36,8 +37,8 @@ describe("DeleteUserUseCase", () => {
         failure(new RepositoryError(ErrorCodes.NotFoundError))
       );
     const result = await deleteUserUseCase.execute(mockId);
-    const resultError = result as Failure<UserNotFoundError>;
     expect(result.isSuccess).toBe(false);
+    const resultError = result as Failure<UserNotFoundError>;
     expect(resultError.error).toBeInstanceOf(UserNotFoundError);
   });
 });

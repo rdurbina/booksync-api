@@ -17,6 +17,7 @@ describe("CreateUserUseCase", () => {
       findByEmail: vi.fn(),
       findByUsername: vi.fn(),
       delete: vi.fn(),
+      update: vi.fn(),
     };
     createUserUseCase = new CreateUserUseCase(
       mockUserRepository as IUserRepository
