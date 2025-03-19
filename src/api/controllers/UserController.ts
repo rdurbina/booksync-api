@@ -12,7 +12,7 @@ export default class UserController {
   async createUser(req: Request, res: Response): Promise<void> {
     const { firstName, lastName, username, password, email } = req.body;
     try {
-      const data = UserDto.create(
+      const data = UserDto.fromRequest(
         firstName,
         lastName,
         username,

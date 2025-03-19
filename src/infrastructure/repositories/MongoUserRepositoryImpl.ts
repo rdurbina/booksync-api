@@ -10,6 +10,24 @@ import DataIntegrityError from "../errors/DataIntegrityError.js";
 
 @injectable()
 export default class MongoUserRepositoryImpl implements IUserRepository {
+  async update(
+    userId: string,
+    user: User
+  ): Promise<Result<User, RepositoryError>> {
+    const userModel = UserMapper.toMongooseModel(user);
+    const updatedUser = await UserModel.findOneAndUpdate(
+      { _id: userId },
+      userModel,
+      { new: true }
+    );
+    if (!updatedUser)
+      return failure(new RepositoryError(ErrorCodes.NotFoundError));
+    const updatedUserEntity = UserMapper.fromMongooseModelToEntity(updatedUser);
+    //Exceptional case: conversion to user entity fails -> bad data integrity
+    if (updatedUserEntity === null) throw new DataIntegrityError();
+    return success(updatedUserEntity);
+  }
+
   async add(user: User): Promise<Result<User, RepositoryError>> {
     const userModel = UserMapper.toMongooseModel(user);
     const savedUser = await userModel.save();

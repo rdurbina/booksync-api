@@ -79,17 +79,18 @@ export default class CreateUserUseCase {
 
     const savedUserResult = await this._userRepository.add(userResult.value);
 
-    if (!savedUserResult.isSuccess) {
-      throw new UnexpectedError("Something went wrong...", "");
-    }
+    if (!savedUserResult.isSuccess)
+      throw new UnexpectedError(
+        "Something went wrong...",
+        "An unexpected error has occurred."
+      );
 
     return success(
-      UserDto.create(
+      UserDto.fromDatabase(
         savedUserResult.value.firstName,
         savedUserResult.value.lastName,
         savedUserResult.value.username,
-        savedUserResult.value.email,
-        savedUserResult.value.password
+        savedUserResult.value.email
       )
     );
   }

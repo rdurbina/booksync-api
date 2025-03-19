@@ -9,7 +9,7 @@ export default class UserDto {
     readonly id?: string
   ) {}
 
-  static create(
+  static fromRequest(
     firstName: string,
     lastName: string,
     username: string,
@@ -17,5 +17,14 @@ export default class UserDto {
     password: string
   ): UserDto {
     return new UserDto(firstName, lastName, username, email, password);
+  }
+
+  static fromDatabase(
+    firstName: string,
+    lastName: string,
+    username: string,
+    email: string
+  ): UserDto {
+    return new UserDto(firstName, lastName, username, email);
   }
 }

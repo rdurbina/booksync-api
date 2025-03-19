@@ -2,7 +2,9 @@ import { failure, Result, success } from "../../shared/result/Result.js";
 import InvalidInputDomainError from "../errors/InvalidInputDomainError.js";
 import UserValidationDomainError from "../errors/UserValidationDomainError.js";
 import {
+  validateFirstName,
   validateId,
+  validateLastName,
   validateNonOptionalParams,
 } from "../validations/UserValidations.js";
 
@@ -78,6 +80,28 @@ export default class User {
     }
     this._password = hashedPassword;
     return true;
+  }
+
+  updatePersonalInformation(
+    firstName: string,
+    lastName: string
+  ): Result<User, UserValidationDomainError> {
+    const errors: InvalidInputDomainError[] = [];
+    validateFirstName(firstName, errors);
+    validateLastName(lastName, errors);
+    if (errors.length > 0) {
+      return failure(
+        new UserValidationDomainError(
+          "Issues were encountered when trying to update the first and last name",
+          errors
+        )
+      );
+    }
+
+    this._firstName = firstName;
+    this._lastName = lastName;
+
+    return success(this);
   }
 
   get firstName(): string {

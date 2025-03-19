@@ -1,3 +1,1 @@
-export default class ErrorMapper {
-    
-}
+export default class ErrorMapper {}

@@ -8,4 +8,5 @@ export default interface IUserRepository {
   findByEmail(email: string): Promise<User | null>;
   findByUsername(username: string): Promise<User | null>;
   delete(id: string): Promise<Result<void, RepositoryError>>;
+  update(userId: string, user: User): Promise<Result<User, RepositoryError>>;
 }
