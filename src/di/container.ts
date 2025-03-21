@@ -1,7 +1,7 @@
 import { Container } from "inversify";
 import IUserRepository from "../application/repositories/IUserRepository.js";
 import { DI_TYPES } from "./types.js";
-import MongoUserRepositoryImpl from "../infrastructure/repositories/MongoUserRepositoryImpl.js";
+import MongoUserRepositoryImpl from "../infrastructure/databases/mongodb/repositories/MongoUserRepositoryImpl.js";
 import CreateUserUseCase from "../application/use-cases/user/CreateUserUseCase.js";
 import UserController from "../api/controllers/UserController.js";
 

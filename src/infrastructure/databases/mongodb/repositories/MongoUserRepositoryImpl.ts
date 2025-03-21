@@ -1,12 +1,12 @@
 import { injectable } from "inversify";
-import User from "../../domain/user/User.js";
-import IUserRepository from "../../application/repositories/IUserRepository.js";
-import UserMapper from "../mappers/UserMapper.js";
-import { failure, Result, success } from "../../shared/result/Result.js";
-import RepositoryError from "../../application/errors/RepositoryError.js";
-import ErrorCodes from "../../application/errors/enums/ErrorCodes.js";
-import UserModel from "../databases/mongodb/models/UserModel.js";
-import DataIntegrityError from "../errors/DataIntegrityError.js";
+import User from "../../../../domain/user/User.js";
+import IUserRepository from "../../../../application/repositories/IUserRepository.js";
+import UserMapper from "../../../mappers/UserMapper.js";
+import { failure, Result, success } from "../../../../shared/result/Result.js";
+import RepositoryError from "../../../../application/errors/RepositoryError.js";
+import ErrorCodes from "../../../../application/errors/enums/ErrorCodes.js";
+import UserModel from "../models/UserModel.js";
+import DataIntegrityError from "../../../errors/DataIntegrityError.js";
 
 @injectable()
 export default class MongoUserRepositoryImpl implements IUserRepository {
