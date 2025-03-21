@@ -1,12 +1,7 @@
 import { failure, Result, success } from "../../shared/result/Result.js";
 import InvalidInputDomainError from "../errors/InvalidInputDomainError.js";
 import UserValidationDomainError from "../errors/UserValidationDomainError.js";
-import {
-  validateFirstName,
-  validateId,
-  validateLastName,
-  validateNonOptionalParams,
-} from "../validations/UserValidations.js";
+import userValidator from "../validations/UserValidations.js";
 
 export default class User {
   private constructor(
@@ -27,13 +22,14 @@ export default class User {
     password: string,
     isAdmin: boolean = false
   ): Result<User, UserValidationDomainError> {
-    const errors: InvalidInputDomainError[] = validateNonOptionalParams(
-      firstName,
-      lastName,
-      username,
-      email,
-      password
-    );
+    const errors: InvalidInputDomainError[] =
+      userValidator.validateNonOptionalParams(
+        firstName,
+        lastName,
+        username,
+        email,
+        password
+      );
 
     if (errors.length > 0) {
       return failure(
@@ -54,15 +50,16 @@ export default class User {
     isAdmin: boolean = false,
     id: string
   ): Result<User, UserValidationDomainError> {
-    const errors: InvalidInputDomainError[] = validateNonOptionalParams(
-      firstName,
-      lastName,
-      username,
-      email,
-      password
-    );
+    const errors: InvalidInputDomainError[] =
+      userValidator.validateNonOptionalParams(
+        firstName,
+        lastName,
+        username,
+        email,
+        password
+      );
 
-    validateId(id, errors);
+    userValidator.validateId(id, errors);
 
     if (errors.length > 0) {
       return failure(
@@ -87,12 +84,12 @@ export default class User {
     lastName: string
   ): Result<User, UserValidationDomainError> {
     const errors: InvalidInputDomainError[] = [];
-    validateFirstName(firstName, errors);
-    validateLastName(lastName, errors);
+    userValidator.validateFirstName(firstName, errors);
+    userValidator.validateLastName(lastName, errors);
     if (errors.length > 0) {
       return failure(
         new UserValidationDomainError(
-          "Issues were encountered when trying to update the first and last name",
+          "The provided information is invalid, please try again",
           errors
         )
       );
@@ -100,6 +97,26 @@ export default class User {
 
     this._firstName = firstName;
     this._lastName = lastName;
+
+    return success(this);
+  }
+
+  updateAccountInformation(
+    email: string,
+    password: string
+  ): Result<User, UserValidationDomainError> {
+    const errors: InvalidInputDomainError[] = [];
+    userValidator.validateEmail(email, errors);
+    userValidator.validatePassword(password, errors);
+
+    if (errors.length > 0) {
+      return failure(
+        new UserValidationDomainError(
+          "The provided information is invalid, please try again",
+          errors
+        )
+      );
+    }
 
     return success(this);
   }
