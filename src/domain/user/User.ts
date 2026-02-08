@@ -4,7 +4,7 @@ import UserValidationDomainError from "../errors/UserValidationDomainError.js";
 import {
   validateId,
   validateNonOptionalParams,
-} from "../validations/UserValidations.js";
+} from "./UserValidations.js";
 
 export default class User {
   private constructor(
