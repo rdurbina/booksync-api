@@ -1,8 +1,7 @@
 import { failure, Result, success } from "../../shared/result/Result.js";
 import InvalidInputDomainError from "../errors/InvalidInputDomainError.js";
 import UserValidationDomainError from "../errors/UserValidationDomainError.js";
-import userValidator from "../validations/UserValidations.js";
-
+import userValidator from "./UserValidations.js";
 export default class User {
   private constructor(
     private _firstName: string,

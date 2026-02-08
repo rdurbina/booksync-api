@@ -1,0 +1,16 @@
+services:
+  database:
+    container_name: booksync-database
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: booksync
+    restart: unless-stopped
+
+volumes:
+  db:
