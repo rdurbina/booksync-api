@@ -1,11 +1,12 @@
 import { describe, expect, test, vi, beforeEach, assert } from "vitest";
-import IUserRepository from "../application/repositories/IUserRepository";
-import CreateUserUseCase from "../application/use-cases/user/CreateUserUseCase";
-import IRoleRepository from "../application/repositories/IRoleRepository";
-import CreateUserRequest from "../application/dtos/user/requests/CreateUserRequest";
-import Role from "../domain/role/Role";
-import UserResponse from "../application/dtos/user/responses/UserResponse";
-import ApplicationErrorCodes from "../application/errors/ApplicationErrorCodes";
+import IUserRepository from "../../application/repositories/IUserRepository";
+import CreateUserUseCase from "../../application/use-cases/user/CreateUserUseCase";
+import IRoleRepository from "../../application/repositories/IRoleRepository";
+import CreateUserRequest from "../../application/dtos/user/requests/CreateUserRequest";
+import Role from "../../domain/role/Role";
+import UserResponse from "../../application/dtos/user/responses/UserResponse";
+import ApplicationErrorCodes from "../../application/errors/ApplicationErrorCodes";
+import { getMockUser } from "./UserTestUtils";
 
 describe("CreateUserUseCase", () => {
   let mockUserRepository: IUserRepository;
@@ -46,24 +47,13 @@ describe("CreateUserUseCase", () => {
       email: "johndoe@spidermail.com",
       password: "StrongAndComplicatedPassword123!",
     };
-
-    const mockUserResponse: UserResponse = new UserResponse(
-      1,
-      "John",
-      "Doe",
-      "johndoe",
-      "johndoe@spidermail.com",
-      "$2b$10$eImiTXuWVxfM37uY4JANjQ==examplehashedvalue1234567890abcd",
-      "B-JO-DO-1",
-      defaultRole,
-    );
-
+    
     mockUserRepository.findByEmail = vi.fn().mockResolvedValue(null);
     mockUserRepository.findByUsername = vi.fn().mockResolvedValue(null);
     mockUserRepository.add = vi.fn().mockResolvedValue(1);
     mockUserRepository.updateBorrowCode = vi
       .fn()
-      .mockResolvedValue(mockUserResponse);
+      .mockResolvedValue(getMockUser());
 
     const result = await createUserUseCase.execute(mockRequestData);
 
@@ -109,7 +99,7 @@ describe("CreateUserUseCase", () => {
     //Repository won't return null, null check will fail
     mockUserRepository.findByEmail = vi
       .fn()
-      .mockResolvedValue(mockRequestData);
+      .mockResolvedValue(getMockUser());
 
     const result = await createUserUseCase.execute(mockRequestData);
 
@@ -128,7 +118,7 @@ describe("CreateUserUseCase", () => {
     //Repository won't return null, null check will fail
     mockUserRepository.findByUsername = vi
       .fn()
-      .mockResolvedValue(mockRequestData)
+      .mockResolvedValue(getMockUser())
 
     const result = await createUserUseCase.execute(mockRequestData);
 

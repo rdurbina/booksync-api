@@ -1,26 +1,24 @@
 import { inject, injectable } from "inversify";
 import { DI_TYPES } from "../../../di/types";
 import IUserRepository from "../../repositories/IUserRepository";
-import { failure, Result, success } from "../../../result/Result";
-import UserNotFoundError from "../../errors/UserNotFoundError";
-import AppError from "../../errors/base/AppError";
+import { completed, failure, Result } from "../../../result/Result";
+import ApplicationError from "../../errors/ApplicationError";
+import ApplicationErrorCodes from "../../errors/ApplicationErrorCodes";
 
 @injectable()
 export default class DeleteUserUseCase {
   constructor(
     @inject(DI_TYPES.UserRepository)
-    private readonly _userRepository: IUserRepository
+    private readonly _userRepository: IUserRepository,
   ) {}
 
-  async execute(id: string): Promise<Result<void, AppError>> {
-    const result = await this._userRepository.delete(id);
-    if (!result.isSuccess) {
+  async execute(id: number): Promise<Result<void, ApplicationError>> {
+    const usersExists = await this._userRepository.findById(id);
+    if (usersExists)
       return failure(
-        new UserNotFoundError(
-          "User not found",
-          "The user you are trying to delete does not exist."
-        )
+        new ApplicationError(ApplicationErrorCodes.NotFoundError, null),
       );
-    } else return success(undefined);
+    await this._userRepository.delete(id);
+    return completed();
   }
 }

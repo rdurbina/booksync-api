@@ -14,3 +14,5 @@ export const success = <T>(value: T): Result<T, never> =>
   new Success(value);
 export const failure = <E extends Error>(error: E): Result<never, E> =>
   new Failure(error);
+
+export const completed = (): Result<undefined, never> => new Success(undefined);

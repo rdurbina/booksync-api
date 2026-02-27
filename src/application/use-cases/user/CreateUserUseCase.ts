@@ -94,6 +94,6 @@ export default class CreateUserUseCase {
       throw new InternalDomainError('Failed to update the borrowCode property, repository response is null')
     }
     
-    return success(user);
+    return success(UserMapper.toResponse(user));
   }
 }
