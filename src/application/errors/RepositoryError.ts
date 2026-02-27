@@ -1,5 +1,5 @@
 export default class RepositoryError extends Error {
-  constructor(readonly errorCode: number) {
+  constructor(public readonly code: string) {
     super();
   }
 }

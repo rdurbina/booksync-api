@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
 import { DI_TYPES } from "../../../di/types";
 import IUserRepository from "../../repositories/IUserRepository";
-import { failure, Result, success } from "../../../shared/result/Result";
+import { failure, Result, success } from "../../../result/Result";
 import UserNotFoundError from "../../errors/UserNotFoundError";
 import AppError from "../../errors/base/AppError";
 

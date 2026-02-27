@@ -1,3 +1,4 @@
 export const DI_TYPES = {
-    UserRepository: Symbol.for("UserRepository")
+    UserRepository: Symbol.for('UserRepository'),
+    RoleRepository: Symbol.for('RoleRepository')
 }

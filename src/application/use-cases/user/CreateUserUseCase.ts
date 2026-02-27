@@ -1,97 +1,99 @@
 import { inject, injectable } from "inversify";
 import User from "../../../domain/user/User.js";
 import IUserRepository from "../../repositories/IUserRepository.js";
-import UserDto from "../../dtos/UserDto.js";
 import { DI_TYPES } from "../../../di/types.js";
-import { failure, Result, success } from "../../../shared/result/Result.js";
-import AppError from "../../errors/base/AppError.js";
-import UnexpectedError from "../../errors/base/UnexpectedError.js";
-import ValidationError from "../../errors/base/ValidationError.js";
-import EmailAlreadyInUseError from "../../errors/EmailAlreadyInUseError.js";
-import UsernameAlreadyInUseError from "../../errors/UsernameAlreadyInUseError.js";
-import { hash } from "bcrypt";
+import { failure, Result, success } from "../../../result/Result.js";
+import { genSalt, hash } from "bcrypt";
+import ApplicationError from "../../errors/ApplicationError.js";
+import CreateUserRequest from "../../dtos/user/requests/CreateUserRequest.js";
+import ApplicationErrorCodes from "../../errors/ApplicationErrorCodes.js";
+import ConflictError from "../../errors/ConflictError.js";
+import UserFields from "../../../domain/user/UserFields.js";
+import UserResponse from "../../dtos/user/responses/UserResponse.js";
+import NewUser from "../../../domain/user/NewUser.js";
+import IRoleRepository from "../../repositories/IRoleRepository.js";
+import Role from "../../../domain/role/Role.js";
+import InternalDomainError from "../../../domain/errors/InternalDomainError.js";
+import UserMapper from "../../mappers/UserMapper.js";
+import { CreateUserProps } from "../../../domain/user/UserProps.js";
 
+//Orchestrates user creation
 @injectable()
 export default class CreateUserUseCase {
   constructor(
     @inject(DI_TYPES.UserRepository)
-    private readonly _userRepository: IUserRepository
+    private readonly _userRepository: IUserRepository,
+    private readonly _roleRepository: IRoleRepository
   ) {}
 
-  async execute(data: UserDto): Promise<Result<UserDto, AppError>> {
-    const userResult = User.create(
-      data.firstName,
-      data.lastName,
-      data.username,
-      data.email,
-      data.password ?? ""
-    );
-    if (!userResult.isSuccess) {
+  async execute(
+    createUserRequest: CreateUserRequest,
+  ): Promise<Result<UserResponse, ApplicationError>> {
+
+    //Fetch default role
+    const defaultRole: Role = await this._roleRepository.getDefaultRole();
+
+    //Map into a prop object
+    const createUserProps: CreateUserProps = UserMapper.toCreateUserProps(createUserRequest);
+
+    //Call the method that contain validation for fields
+    const result = NewUser.create(createUserProps, defaultRole);
+
+    if (!result.isSuccess) {
       return failure(
-        new ValidationError(
-          "Couldn't create user",
-          "Issues were encountered when trying to create a new user",
-          userResult.error.errors
-        )
+        new ApplicationError(
+          ApplicationErrorCodes.ValidationError,
+          result.error,
+        ),
       );
     }
 
-    const user = userResult.value;
-
-    const isEmailAlreadyInUse = await this._userRepository.findByEmail(
-      user.email
+    //Conflict validation
+    const isEmailInUse: User | null = await this._userRepository.findByEmail(
+      createUserRequest.email,
     );
-
-    if (isEmailAlreadyInUse) {
+    if (isEmailInUse) {
+      const conflictError: ConflictError = new ConflictError(UserFields.Email);
       return failure(
-        new EmailAlreadyInUseError(
-          "The email provided is already in use",
-          "Cannot create a user with an email already in use, please provide a valid email address."
-        )
+        new ApplicationError(
+          ApplicationErrorCodes.ConflictError,
+          conflictError,
+        ),
       );
     }
 
-    const isUsernameAlreadyInUse = await this._userRepository.findByUsername(
-      user.username
+    const isUsernameInUse: User | null = await this._userRepository.findByUsername(
+      createUserRequest.username,
     );
-
-    if (isUsernameAlreadyInUse) {
+    if (isUsernameInUse) {
+      const conflictError: ConflictError = new ConflictError(
+        UserFields.Username,
+      );
       return failure(
-        new UsernameAlreadyInUseError(
-          "The username provided is already in use",
-          "Cannot create a user with a username already in use, please provide a valid username."
-        )
+        new ApplicationError(
+          ApplicationErrorCodes.ConflictError,
+          conflictError,
+        ),
       );
     }
 
-    const saltRounds = parseInt(process.env.SALT_ROUNDS || "10");
-    const hashedPassword = await hash(user.password, saltRounds);
-    const isPasswordSet = user.setHashedPassword(hashedPassword);
+    //Extract the value from the result
+    const newUser: NewUser = result.value;
 
-    if (!isPasswordSet) {
-      return failure(
-        new UnexpectedError(
-          "Unexpected error",
-          "Something went wrong... Please try again later."
-        )
-      );
+    //Encrypt the user's password
+    const salt = await genSalt(10);
+    const hashedPassword = await hash(newUser.password, salt);
+    newUser.updatePasswordHash(hashedPassword);
+
+    //Get the ID and generate borrow code to proceed with the 2nd step of the account creation
+    const newUserId: number = await this._userRepository.add(newUser);
+    const borrowCode: string = newUser.createBorrowCode(newUserId);
+    const user: User | null = await this._userRepository.updateBorrowCode(newUserId, borrowCode);
+
+    if (!user) {
+      throw new InternalDomainError('Failed to update the borrowCode property, repository response is null')
     }
-
-    const savedUserResult = await this._userRepository.add(userResult.value);
-
-    if (!savedUserResult.isSuccess)
-      throw new UnexpectedError(
-        "Something went wrong...",
-        "An unexpected error has occurred."
-      );
-
-    return success(
-      UserDto.fromDatabase(
-        savedUserResult.value.firstName,
-        savedUserResult.value.lastName,
-        savedUserResult.value.username,
-        savedUserResult.value.email
-      )
-    );
+    
+    return success(user);
   }
 }

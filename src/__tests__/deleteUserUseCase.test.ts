@@ -2,9 +2,9 @@ import { describe } from "node:test";
 import IUserRepository from "../application/repositories/IUserRepository";
 import { beforeEach, expect, test, vi } from "vitest";
 import RepositoryError from "../application/errors/RepositoryError";
-import ErrorCodes from "../application/errors/enums/ErrorCodes";
+import ErrorCodes from "../application/errors/ApplicationErrorCodes";
 import DeleteUserUseCase from "../application/use-cases/user/DeleteUserUseCase";
-import { failure, Failure, success } from "../shared/result/Result";
+import { failure, Failure, success } from "../result/Result";
 import UserNotFoundError from "../application/errors/UserNotFoundError";
 
 describe("DeleteUserUseCase", () => {

@@ -3,7 +3,7 @@ import UpdatePersonalInformationUseCase from "../application/use-cases/user/Upda
 import IUserRepository from "../application/repositories/IUserRepository";
 import UserDto from "../application/dtos/UserDto";
 import MissingIdError from "../application/errors/MissingIdError";
-import { Failure, Success } from "../shared/result/Result";
+import { Failure, Success } from "../result/Result";
 import NotFoundError from "../application/errors/base/NotFoundError";
 import User from "../domain/user/User";
 import ValidationError from "../application/errors/base/ValidationError";

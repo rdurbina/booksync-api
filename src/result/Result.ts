@@ -10,7 +10,7 @@ export class Failure<E extends Error = Error> {
 
 export type Result<T, E extends Error = Error> = Success<T> | Failure<E>;
 
-export const success = <T, E extends Error>(value: T): Result<T, E> =>
+export const success = <T>(value: T): Result<T, never> =>
   new Success(value);
-export const failure = <T, E extends Error>(error: E): Result<T, E> =>
+export const failure = <E extends Error>(error: E): Result<never, E> =>
   new Failure(error);

@@ -3,7 +3,7 @@ import { DI_TYPES } from "../../../di/types";
 import IUserRepository from "../../repositories/IUserRepository";
 import UserDto from "../../dtos/UserDto";
 import MissingIdError from "../../errors/MissingIdError";
-import { failure, Result, success } from "../../../shared/result/Result";
+import { failure, Result, success } from "../../../result/Result";
 import NotFoundError from "../../errors/base/NotFoundError";
 import ValidationError from "../../errors/base/ValidationError";
 import AppError from "../../errors/base/AppError";
